@@ -4,11 +4,10 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.chart import BarChart, Reference
 import matplotlib.pyplot as plt
 
-
 # "C:/Users/dan.panorama2/Desktop/VisualStudio/MOH/"
 WORKING_DIR = "C:/Users/עדי/Desktop/Adi/MOH"
 
-wb = load_workbook(filename='C:/Users/עדי/Desktop/Adi/MOH/book1.xlsx')
+wb = load_workbook(filename='C:/Users/עדי/Desktop/Adi/MOH//book3.xlsx')
 # print(wb)
 
 sheet = wb.active
@@ -30,7 +29,7 @@ def room_analysis(room_col):
 # room_msg, used_room_arr, rooms_arr = room_analysis(room_num_col)
 
 def create_file(msg):
-    with open("C:/Users/עדי/Desktop/Adi/MOH/show_data.txt", "w") as f:
+    with open("C:/Users/עדי/Desktop/Adi/MOH//show_data3.txt", "w") as f:
         f.write(msg)
         f.close()
 
@@ -42,7 +41,7 @@ def ppl_in_room(rooms_arr, used_room_arr):
     for room in used_room_arr:
         num_of_ppl_in_room = rooms_arr[1:].count(room)
         count_msg = f"Room {room} - {num_of_ppl_in_room} people"
-        with open("C:/Users/עדי/Desktop/Adi/MOH/show_data.txt", "a") as f:
+        with open("C:/Users/עדי/Desktop/Adi/MOH//show_data3.txt", "a") as f:
             f.write("\n" + count_msg)
 
 
@@ -51,7 +50,7 @@ def ppl_in_room(rooms_arr, used_room_arr):
 
 def add_enter():
     # ADD ENTER at the end of this section in the File
-    with open("C:/Users/עדי/Desktop/Adi/MOH/show_data.txt", "a") as f:
+    with open("C:/Users/עדי/Desktop/Adi/MOH//show_data3.txt", "a") as f:
         f.write("\n")
     f.close()
 
@@ -79,7 +78,7 @@ def count_ppl_in_group(group_num_arr, group_num_no_duplicates):
         if (group == ''):
             group = "None"
         count_group_msg = f"Group {group} - {num_of_ppl_in_group} people"
-        with open("C:/Users/עדי/Desktop/Adi/MOH/show_data.txt", "a") as f:
+        with open("C:/Users/עדי/Desktop/Adi/MOH//show_data3.txt", "a") as f:
             f.write("\n" + count_group_msg)
     return num_ppl_in_group_arr
 
@@ -89,20 +88,28 @@ def count_ppl_in_group(group_num_arr, group_num_no_duplicates):
 # add_enter()
 
 
-def graph_info(group_num_no_duplicates, num_ppl_in_group_arr):
+def graph_info_bar(group_num_no_duplicates, num_ppl_in_group_arr):
     group_num_no_dups_arr = list(group_num_no_duplicates)  # convert set to arr for plotting!
     # bar_colors = ["yellow", "blue", "red", "orange", "green", "purple"]
     # print(group_num_no_dups_arr)
-    fig = plt.figure()
+    # fig = plt.figure()
     plt.bar(group_num_no_dups_arr, num_ppl_in_group_arr)
 
     plt.xlabel("Group Number")
     plt.ylabel("Amount of People in each Group")
     plt.title("Amount of People in Group Number")
 
-    # Make y-axis interval steps of 1
-    y_ticks = np.arange(0, max(num_ppl_in_group_arr) + 1, 1)
+    # Make y-axis interval steps of 1 (OPTIONAL)
+    y_ticks = np.arange(0, max(num_ppl_in_group_arr) + 1, 5)
     plt.yticks(y_ticks)
+    plt.show()
+
+
+def graph_info_pie(group_num_no_duplicates, num_ppl_in_group_arr):
+    # ax1 = plt.subplots()
+    plt.pie(num_ppl_in_group_arr, labels=group_num_no_duplicates,
+            autopct='%1.1f%%')  # shows distribution in percentage!
+    plt.legend(title="Group Numbers:")
     plt.show()
 
 
@@ -116,7 +123,8 @@ if __name__ == "__main__":
     group_num_arr, group_num_no_duplicates = group_analysis(group_num_col)
     num_ppl_in_group_arr = count_ppl_in_group(group_num_arr, group_num_no_duplicates)
     add_enter()
-    graph_info(group_num_no_duplicates, num_ppl_in_group_arr)
+    graph_info_bar(group_num_no_duplicates, num_ppl_in_group_arr)
+    graph_info_pie(group_num_no_duplicates, num_ppl_in_group_arr)
 
 ########################################################################################################
 ########################################### WORKING CODE START #########################################
