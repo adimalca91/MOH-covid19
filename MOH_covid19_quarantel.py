@@ -5,13 +5,15 @@ from openpyxl.chart import BarChart, Reference
 import matplotlib.pyplot as plt
 
 # "C:/Users/dan.panorama2/Desktop/VisualStudio/MOH/"
-WORKING_DIR = "C:/Users/עדי/Desktop/Adi/MOH"
+WORKING_DIR = "C:/Users/עדי/Desktop/Adi/MOH/"
+EXCEL_NAME = "book12.xlsx"
+FILE_NAME = "show_data12.txt"
 
-wb = load_workbook(filename='C:/Users/עדי/Desktop/Adi/MOH//book3.xlsx')
+wb = load_workbook(filename=WORKING_DIR + EXCEL_NAME)
 # print(wb)
 
 sheet = wb.active
-room_num_col = sheet['M']
+room_num_col = sheet['N']
 group_num_col = sheet['D']
 
 
@@ -21,6 +23,7 @@ def room_analysis(room_col):
         # print(first_col[i].value)
         rooms_arr.append(room_num_col[i].value)
     used_room_arr = set(rooms_arr[1:])
+    # print(used_room_arr)
     # Write to a file the Number of USED rooms:
     room_msg = f"Total Number of People: {len(rooms_arr[1:])} \nNumber of used rooms: {str(len(used_room_arr))} \n "
     return room_msg, used_room_arr, rooms_arr
@@ -29,7 +32,7 @@ def room_analysis(room_col):
 # room_msg, used_room_arr, rooms_arr = room_analysis(room_num_col)
 
 def create_file(msg):
-    with open("C:/Users/עדי/Desktop/Adi/MOH//show_data3.txt", "w") as f:
+    with open(WORKING_DIR + FILE_NAME, "w") as f:
         f.write(msg)
         f.close()
 
@@ -41,7 +44,7 @@ def ppl_in_room(rooms_arr, used_room_arr):
     for room in used_room_arr:
         num_of_ppl_in_room = rooms_arr[1:].count(room)
         count_msg = f"Room {room} - {num_of_ppl_in_room} people"
-        with open("C:/Users/עדי/Desktop/Adi/MOH//show_data3.txt", "a") as f:
+        with open(WORKING_DIR + FILE_NAME, "a") as f:
             f.write("\n" + count_msg)
 
 
@@ -50,7 +53,7 @@ def ppl_in_room(rooms_arr, used_room_arr):
 
 def add_enter():
     # ADD ENTER at the end of this section in the File
-    with open("C:/Users/עדי/Desktop/Adi/MOH//show_data3.txt", "a") as f:
+    with open(WORKING_DIR + FILE_NAME, "a") as f:
         f.write("\n")
     f.close()
 
@@ -78,7 +81,7 @@ def count_ppl_in_group(group_num_arr, group_num_no_duplicates):
         if (group == ''):
             group = "None"
         count_group_msg = f"Group {group} - {num_of_ppl_in_group} people"
-        with open("C:/Users/עדי/Desktop/Adi/MOH//show_data3.txt", "a") as f:
+        with open(WORKING_DIR + FILE_NAME, "a") as f:
             f.write("\n" + count_group_msg)
     return num_ppl_in_group_arr
 
@@ -88,20 +91,27 @@ def count_ppl_in_group(group_num_arr, group_num_no_duplicates):
 # add_enter()
 
 
+# Adding labels to the top of each bar
+def add_labels(x, y):
+    for i in range(len(x)):
+        plt.text(i, y[i], y[i], ha='center')
+
+
 def graph_info_bar(group_num_no_duplicates, num_ppl_in_group_arr):
     group_num_no_dups_arr = list(group_num_no_duplicates)  # convert set to arr for plotting!
     # bar_colors = ["yellow", "blue", "red", "orange", "green", "purple"]
     # print(group_num_no_dups_arr)
     # fig = plt.figure()
-    plt.bar(group_num_no_dups_arr, num_ppl_in_group_arr)
+    plt.bar(group_num_no_dups_arr, num_ppl_in_group_arr)  # TODO: added edge color to each bar
 
     plt.xlabel("Group Number")
     plt.ylabel("Amount of People in each Group")
     plt.title("Amount of People in Group Number")
 
     # Make y-axis interval steps of 1 (OPTIONAL)
-    y_ticks = np.arange(0, max(num_ppl_in_group_arr) + 1, 5)
+    y_ticks = np.arange(0, max(num_ppl_in_group_arr) + 2, 5)  # TODO: changed the max height to +2 instead of +1
     plt.yticks(y_ticks)
+    add_labels(group_num_no_dups_arr, num_ppl_in_group_arr)
     plt.show()
 
 
