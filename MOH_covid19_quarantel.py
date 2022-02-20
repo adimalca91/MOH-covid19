@@ -3,11 +3,14 @@ import pandas as pd
 from openpyxl import Workbook, load_workbook
 from openpyxl.chart import BarChart, Reference
 import matplotlib.pyplot as plt
+import seaborn as sns
 
-# "C:/Users/dan.panorama2/Desktop/VisualStudio/MOH/"
+sns.set()
+
+# "C:/Users/dan.panorama2/Desktop/Adi/VisualStudio/MOH/"
 WORKING_DIR = "C:/Users/עדי/Desktop/Adi/MOH/"
-EXCEL_NAME = "book12.xlsx"
-FILE_NAME = "show_data12.txt"
+EXCEL_NAME = "book20.xlsx"
+FILE_NAME = "show_data20.txt"
 
 wb = load_workbook(filename=WORKING_DIR + EXCEL_NAME)
 # print(wb)
@@ -15,6 +18,18 @@ wb = load_workbook(filename=WORKING_DIR + EXCEL_NAME)
 sheet = wb.active
 room_num_col = sheet['N']
 group_num_col = sheet['D']
+id_num_col = sheet['A']
+age_col = sheet['O']
+
+
+def create_age_arr():
+    age_arr = []
+    for i in range(len(age_col)):
+        # print(first_col[i].value)
+        age_arr.append(age_col[i].value)
+    # print(len(age_arr[1:]))
+    # print(age_arr[1:])
+    return (age_arr[1:])
 
 
 def room_analysis(room_col):
@@ -82,6 +97,9 @@ def add_labels(x, y):
 
 def graph_info_bar(group_num_no_duplicates, num_ppl_in_group_arr):
     group_num_no_dups_arr = list(group_num_no_duplicates)  # convert set to arr for plotting!
+    # bar_colors = ["yellow", "blue", "red", "orange", "green", "purple"]
+    # print(group_num_no_dups_arr)
+    # fig = plt.figure()
     plt.bar(group_num_no_dups_arr, num_ppl_in_group_arr)  # TODO: added edge color to each bar
 
     plt.xlabel("Group Number")
@@ -103,6 +121,26 @@ def graph_info_pie(group_num_no_duplicates, num_ppl_in_group_arr):
     plt.show()
 
 
+def count_ages(age_arr):
+    no_dups_age = set(age_arr)
+    age_count_dict = {}
+    for age in no_dups_age:
+        age_count_dict[age] = age_arr.count(age)
+
+    return (age_count_dict)
+
+
+def plot_age_analysis(age_count_dict):
+    ages = list(age_count_dict.keys())
+    amounts = list(age_count_dict.values())
+    plt.bar(ages, amounts)
+    plt.xlabel("Age")
+    plt.ylabel("Amount of People in each age group")
+    plt.title("Age Analysis")
+    # add_labels(ages, amounts)
+    plt.show()
+
+
 if __name__ == "__main__":
     room_msg, used_room_arr, rooms_arr = room_analysis(room_num_col)
     create_file(room_msg)
@@ -113,3 +151,5 @@ if __name__ == "__main__":
     add_enter()
     graph_info_bar(group_num_no_duplicates, num_ppl_in_group_arr)
     graph_info_pie(group_num_no_duplicates, num_ppl_in_group_arr)
+    plot_age_analysis(count_ages(create_age_arr()))  # TODO: added age analysis!
+
